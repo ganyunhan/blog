@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Verilog HDL 简介与基本语法（1） - 御坂小镇</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Hank.Gan&#039;s Blog"><meta name="msapplication-TileImage" content="/img/favicon.svg"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Hank.Gan&#039;s Blog"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="FPGA学习  阶段一：Verilog HDL 简介与基本语法（1） ¶FPGA硬件开发路线学习规划： 由于想学习FPGA的相关内容，同时给数字电路打点基础，于是借助着B站上西安电子科技大学的视频开始学习Verilog HDL这门硬件描述语言，在学完语言后，将按照**《FPGA设计技巧与案例开发详解》**这本书上的相关内容在一块核心为Altera Cyclone IV的开发板上完成基本例程，之后在"><meta property="og:type" content="blog"><meta property="og:title" content="Verilog HDL 简介与基本语法（1）"><meta property="og:url" content="http://example.com/2020/03/01/FPGA%E5%AD%A6%E4%B9%A0%20%20%E9%98%B6%E6%AE%B5%E4%B8%80%EF%BC%9AVerilog%20HDL%20%E7%AE%80%E4%BB%8B%E4%B8%8E%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95(1)/"><meta property="og:site_name" content="御坂小镇"><meta property="og:description" content="FPGA学习  阶段一：Verilog HDL 简介与基本语法（1） ¶FPGA硬件开发路线学习规划： 由于想学习FPGA的相关内容，同时给数字电路打点基础，于是借助着B站上西安电子科技大学的视频开始学习Verilog HDL这门硬件描述语言，在学完语言后，将按照**《FPGA设计技巧与案例开发详解》**这本书上的相关内容在一块核心为Altera Cyclone IV的开发板上完成基本例程，之后在"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://s2.ax1x.com/2020/02/26/3UO7Zt.png"><meta property="og:image" content="https://s2.ax1x.com/2020/02/28/3DOVPI.png"><meta property="article:published_time" content="2020-02-29T16:42:10.000Z"><meta property="article:modified_time" content="2021-08-10T05:21:25.117Z"><meta property="article:author" content="Hank.Gan"><meta property="article:tag" content="FPGA"><meta property="article:tag" content="硬件"><meta property="article:tag" content="Verilog HDL"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="https://s2.ax1x.com/2020/02/26/3UO7Zt.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://example.com/2020/03/01/FPGA%E5%AD%A6%E4%B9%A0%20%20%E9%98%B6%E6%AE%B5%E4%B8%80%EF%BC%9AVerilog%20HDL%20%E7%AE%80%E4%BB%8B%E4%B8%8E%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95(1)/"},"headline":"Verilog HDL 简介与基本语法（1）","image":["https://s2.ax1x.com/2020/02/26/3UO7Zt.png","https://s2.ax1x.com/2020/02/28/3DOVPI.png"],"datePublished":"2020-02-29T16:42:10.000Z","dateModified":"2021-08-10T05:21:25.117Z","author":{"@type":"Person","name":"Hank.Gan"},"publisher":{"@type":"Organization","name":"御坂小镇","logo":{"@type":"ImageObject","url":{"light":"/img/logo.png","dark":"/img/logo.png"}}},"description":"FPGA学习  阶段一：Verilog HDL 简介与基本语法（1） ¶FPGA硬件开发路线学习规划： 由于想学习FPGA的相关内容，同时给数字电路打点基础，于是借助着B站上西安电子科技大学的视频开始学习Verilog HDL这门硬件描述语言，在学完语言后，将按照**《FPGA设计技巧与案例开发详解》**这本书上的相关内容在一块核心为Altera Cyclone IV的开发板上完成基本例程，之后在"}</script><link rel="canonical" href="http://example.com/2020/03/01/FPGA%E5%AD%A6%E4%B9%A0%20%20%E9%98%B6%E6%AE%B5%E4%B8%80%EF%BC%9AVerilog%20HDL%20%E7%AE%80%E4%BB%8B%E4%B8%8E%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95(1)/"><link rel="icon" href="/img/favicon.svg"><link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/font-awesome/5.12.0/css/all.min.css"><link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css"><link rel="stylesheet" href="https://fonts.loli.net/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" defer></script><!--!--><link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/cookieconsent/3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/lightgallery/1.6.8/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/justifiedGallery/3.7.0/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdnjs.loli.net/ajax/libs/pace/1.0.2/pace.min.js"></script><!--!--><!--!--><meta name="generator" content="Hexo 5.4.0"></head><body class="is-3-column"><script type="text/javascript" src="/js/imaegoo/night.js"></script><canvas id="universe"></canvas><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img class="logo-img" src="/img/logo.png" alt="御坂小镇" height="28"><img class="logo-img-dark" src="/img/logo.png" alt="御坂小镇" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">首页</a><a class="navbar-item" href="/archives">时间轴</a><a class="navbar-item" href="/categories">目录</a><a class="navbar-item" href="/tags">标签</a><a class="navbar-item" href="/about">关于</a></div><div class="navbar-end"><a class="navbar-item night" id="night-nav" title="Night Mode" href="javascript:;"><i class="fas fa-moon" id="night-icon"></i></a><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ganyunhan"><i class="fab fa-github"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-6-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-02-29T16:42:10.000Z" title="2020/3/1 上午12:42:10">2020-03-01</time>发表</span><span class="level-item"><time dateTime="2021-08-10T05:21:25.117Z" title="2021/8/10 下午1:21:25">2021-08-10</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/%E7%A1%AC%E4%BB%B6/">硬件</a><span> / </span><a class="link-muted" href="/categories/%E7%A1%AC%E4%BB%B6/FPGA/">FPGA</a><span> / </span><a class="link-muted" href="/categories/%E7%A1%AC%E4%BB%B6/FPGA/Verilog-HDL/">Verilog HDL</a></span><span class="level-item">24 分钟读完 (大约3624个字)</span><span class="level-item leancloud_visitors" id="/2020/03/01/FPGA%E5%AD%A6%E4%B9%A0%20%20%E9%98%B6%E6%AE%B5%E4%B8%80%EF%BC%9AVerilog%20HDL%20%E7%AE%80%E4%BB%8B%E4%B8%8E%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95(1)/" data-flag-title="Verilog HDL 简介与基本语法（1）"><i class="far fa-eye"></i>&nbsp;&nbsp;<span id="twikoo_visitors"><i class="fa fa-spinner fa-spin"></i></span>次访问</span></div></div><h1 class="title is-3 is-size-4-mobile">Verilog HDL 简介与基本语法（1）</h1><div class="content"><h1>FPGA学习  阶段一：Verilog HDL 简介与基本语法（1）</h1>
+<h2 id="FPGA硬件开发路线学习规划："><a class="header-anchor" href="#FPGA硬件开发路线学习规划：">¶</a>FPGA硬件开发路线学习规划：</h2>
+<p>由于想学习FPGA的相关内容，同时给数字电路打点基础，于是借助着B站上<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/av47921291?p=1">西安电子科技大学的视频</a>开始学习Verilog HDL这门硬件描述语言，在学完语言后，将按照**《FPGA设计技巧与案例开发详解》**这本书上的相关内容在一块核心为<em>Altera Cyclone IV</em>的开发板上完成基本例程，之后在网上寻找相关项目学习、开发</p>
+<h2 id="1-Verilog的基本概念"><a class="header-anchor" href="#1-Verilog的基本概念">¶</a>1. Verilog的基本概念</h2>
+<ul>
+<li>Verilog是一门类C语言，语法非常接近C，将电路设计转变为程序设计</li>
+<li>Verilog的代码对应的是现实中的一个硬件，这个过程叫“综合”，类似于C语言的编译</li>
+<li>Verilog的代码是并行执行的</li>
+</ul>
+<span id="more"></span>
+<h2 id="2-Verilog-HDL基础知识"><a class="header-anchor" href="#2-Verilog-HDL基础知识">¶</a>2. Verilog HDL基础知识</h2>
+<h3 id="2-1-Verilog-HDL语言要素"><a class="header-anchor" href="#2-1-Verilog-HDL语言要素">¶</a>2.1 Verilog HDL语言要素</h3>
+<h4 id="2-1-1-空白符"><a class="header-anchor" href="#2-1-1-空白符">¶</a>2.1.1 空白符</h4>
+<p>空白符包括空格符<code>\b</code>、制表符<code>\t</code>、换行符<code>\n</code>、和换页符<code>\f</code>。在编译和综合时，空白符被忽略：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">initial begin a = <span class="number">3&#x27;b</span>100; b = <span class="number">3&#x27;b</span>010; end</span><br><span class="line"></span><br><span class="line">equals to:</span><br><span class="line"></span><br><span class="line">initial</span><br><span class="line">begin</span><br><span class="line">    a = <span class="number">3&#x27;b</span>100;</span><br><span class="line">    b = <span class="number">3&#x27;b</span>010;</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
+<h4 id="2-1-2-注释符"><a class="header-anchor" href="#2-1-2-注释符">¶</a>2.1.2 注释符</h4>
+<p>注释与C语言相同，单行注释用<code>//</code>，多行注释用<code>/*  */</code></p>
+<h4 id="2-1-3-标识符"><a class="header-anchor" href="#2-1-3-标识符">¶</a>2.1.3 标识符</h4>
+<p>标识符命名规则与C语言基本相同，只允许出现字母、数字、$符号和_ 下划线，第一个字符必须是字母或 _下划线</p>
+<h4 id="2-1-4-数值"><a class="header-anchor" href="#2-1-4-数值">¶</a>2.1.4 数值</h4>
+<ul>
+<li>Verilog HDL有四种基本的逻辑数值状态：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">状态</th>
+<th style="text-align:center">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">0</td>
+<td style="text-align:center">低电平、逻辑0、“假”</td>
+</tr>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">高电平、逻辑1、“真”</td>
+</tr>
+<tr>
+<td style="text-align:center">x或X</td>
+<td style="text-align:center">不确定或未知的逻辑状态</td>
+</tr>
+<tr>
+<td style="text-align:center">z或Z</td>
+<td style="text-align:center">高阻态</td>
+</tr>
+</tbody>
+</table>
+<p>备注：高阻态<code>High impedance</code>表示电路中的某个节点具有相对电路中其他点相对更高的阻抗<br>
+电路分析时高阻态可做开路理解。可以把它看作输出(输入)电阻非常大。它的极限状态可以认为悬空(开路)。</p>
+<p>当门电路的输出上拉管导通而下拉管截止时,输出为高电平;反之就是低电平;如上拉管和下拉管都截止时,输出端就相当于浮空(没有电流流动),其电平随外部电平高低而定,即该门电路放弃对输出端电路的控制 。</p>
+<ul>
+<li>整数及其表示</li>
+</ul>
+<p><code>+/-(size&gt;'&lt;base_format&gt;&lt;number&gt;</code></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">数制</th>
+<th style="text-align:center">基数符号</th>
+<th style="text-align:center">合法标识符</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">二进制</td>
+<td style="text-align:center">b或B</td>
+<td style="text-align:center">0、1、x、X、z、Z、？、_</td>
+</tr>
+<tr>
+<td style="text-align:center">八进制</td>
+<td style="text-align:center">o或O</td>
+<td style="text-align:center">0~7、x、X、z、Z、？、_</td>
+</tr>
+<tr>
+<td style="text-align:center">十进制</td>
+<td style="text-align:center">d或D</td>
+<td style="text-align:center">0~9、_</td>
+</tr>
+<tr>
+<td style="text-align:center">十六进制</td>
+<td style="text-align:center">h或H</td>
+<td style="text-align:center">0<sub>9、a</sub>f、A~F、x、X、z、Z、？、_</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//正确的表示</span></span><br><span class="line"><span class="number">8&#x27;b</span>10001101 <span class="comment">//位宽为8位的二进制数10001101</span></span><br><span class="line"><span class="number">8&#x27;</span>ha6       <span class="comment">//位宽为8位的十六进制数a6</span></span><br><span class="line"><span class="number">5&#x27;</span>o35       <span class="comment">//位宽为5位的八进制数35</span></span><br><span class="line"><span class="number">4&#x27;</span>d6        <span class="comment">//位宽为4位的十进制数6</span></span><br><span class="line"><span class="number">4&#x27;b</span>1x_01    <span class="comment">//位宽为4位的二进制数1x01</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//错误的表示</span></span><br><span class="line"><span class="number">4&#x27;</span>d<span class="number">-4</span>       <span class="comment">//数值不能为负，有负号应放在最左边</span></span><br><span class="line"><span class="number">3&#x27;</span> b001     <span class="comment">//&#x27;和基数b之间不能有空格</span></span><br><span class="line">(<span class="number">4</span>+<span class="number">4</span>)<span class="string">&#x27;b11   //位宽不能是表达式</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>实数及其表示<br>
+和C语言相同：<br>
+a.十进制表示法，小数点两边必须都有数字<br>
+b.科学计数法</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2.7</span>                 <span class="comment">//十进制计数法</span></span><br><span class="line"><span class="number">5.2e8</span>               <span class="comment">//科学计数法</span></span><br><span class="line"><span class="number">3.5E-6</span>              <span class="comment">//e和E意义相同</span></span><br><span class="line"><span class="number">5</span>_4582<span class="number">.2158</span>_5896    <span class="comment">//使用下划线可提高可读性</span></span><br><span class="line"><span class="number">6.</span>                  <span class="comment">//非法表示</span></span><br><span class="line"><span class="number">.3e5</span>                <span class="comment">//非法表示</span></span><br></pre></td></tr></table></figure>
+<h3 id="2-2-物理数据类型"><a class="header-anchor" href="#2-2-物理数据类型">¶</a>2.2 物理数据类型</h3>
+<p>物理数据类型有连线型、寄存器型和储存器型</p>
+<h4 id="2-2-1-信号强度"><a class="header-anchor" href="#2-2-1-信号强度">¶</a>2.2.1 信号强度</h4>
+<p>信号强度表示数字电路中不同强度的驱动源，用来<strong>解决不同驱动强度存在下的赋值冲突</strong>：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">标记符</th>
+<th style="text-align:center">名称</th>
+<th style="text-align:center">类型</th>
+<th style="text-align:center">强弱程度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">supply</td>
+<td style="text-align:center">电源级驱动</td>
+<td style="text-align:center">驱动</td>
+<td style="text-align:center">最强</td>
+</tr>
+<tr>
+<td style="text-align:center">strong</td>
+<td style="text-align:center">强驱动</td>
+<td style="text-align:center">驱动</td>
+<td style="text-align:center">强</td>
+</tr>
+<tr>
+<td style="text-align:center">pull</td>
+<td style="text-align:center">上拉级驱动</td>
+<td style="text-align:center">驱动</td>
+<td style="text-align:center">较强</td>
+</tr>
+<tr>
+<td style="text-align:center">large</td>
+<td style="text-align:center">大容性</td>
+<td style="text-align:center">存储</td>
+<td style="text-align:center">中强</td>
+</tr>
+<tr>
+<td style="text-align:center">weak</td>
+<td style="text-align:center">弱驱动</td>
+<td style="text-align:center">驱动</td>
+<td style="text-align:center">中</td>
+</tr>
+<tr>
+<td style="text-align:center">medium</td>
+<td style="text-align:center">中性驱动</td>
+<td style="text-align:center">存储</td>
+<td style="text-align:center">较弱</td>
+</tr>
+<tr>
+<td style="text-align:center">small</td>
+<td style="text-align:center">小容性</td>
+<td style="text-align:center">存储</td>
+<td style="text-align:center">弱</td>
+</tr>
+<tr>
+<td style="text-align:center">highz</td>
+<td style="text-align:center">高容性</td>
+<td style="text-align:center">高阻</td>
+<td style="text-align:center">最弱</td>
+</tr>
+</tbody>
+</table>
+<h4 id="2-2-2-连线型"><a class="header-anchor" href="#2-2-2-连线型">¶</a>2.2.2 连线型</h4>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">连线型数据类型</th>
+<th style="text-align:center">功能说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">wire,tri</td>
+<td style="text-align:center">标准连线（缺省视为该类型）</td>
+</tr>
+<tr>
+<td style="text-align:center">wor,trior</td>
+<td style="text-align:center">多重驱动时，具有<code>线或</code>特性的连线型</td>
+</tr>
+<tr>
+<td style="text-align:center">wand,trand</td>
+<td style="text-align:center">多重驱动时，具有<code>线与</code>特性的连线型</td>
+</tr>
+<tr>
+<td style="text-align:center">trireg</td>
+<td style="text-align:center">具有电荷保持特性的连线型数据（特例）</td>
+</tr>
+<tr>
+<td style="text-align:center">tri1</td>
+<td style="text-align:center">上拉电阻</td>
+</tr>
+<tr>
+<td style="text-align:center">tri0</td>
+<td style="text-align:center">下拉电阻</td>
+</tr>
+<tr>
+<td style="text-align:center">supply1</td>
+<td style="text-align:center">电源线，用于对电源建模，为高电平1</td>
+</tr>
+<tr>
+<td style="text-align:center">supply0</td>
+<td style="text-align:center">电源线，用于对“地”建模，为低电平0</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>单连线之间的逻辑wire和tri</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">wire/tri</th>
+<th style="text-align:center">0</th>
+<th style="text-align:center">1</th>
+<th style="text-align:center">x</th>
+<th style="text-align:center">z</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">x</td>
+<td style="text-align:center">x</td>
+<td style="text-align:center">0</td>
+</tr>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">x</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">x</td>
+<td style="text-align:center">1</td>
+</tr>
+<tr>
+<td style="text-align:center">x</td>
+<td style="text-align:center">x</td>
+<td style="text-align:center">x</td>
+<td style="text-align:center">x</td>
+<td style="text-align:center">x</td>
+</tr>
+<tr>
+<td style="text-align:center">z</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">x</td>
+<td style="text-align:center">z</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>含有<code>线或</code>时连线之间的逻辑</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">wor/trior</th>
+<th style="text-align:center">0</th>
+<th style="text-align:center">1</th>
+<th style="text-align:center">x</th>
+<th style="text-align:center">z</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">x</td>
+<td style="text-align:center">0</td>
+</tr>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">1</td>
+</tr>
+<tr>
+<td style="text-align:center">x</td>
+<td style="text-align:center">x</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">x</td>
+<td style="text-align:center">x</td>
+</tr>
+<tr>
+<td style="text-align:center">z</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">x</td>
+<td style="text-align:center">z</td>
+</tr>
+</tbody>
+</table>
+<h4 id="2-2-3-连续型数据类型的声明"><a class="header-anchor" href="#2-2-3-连续型数据类型的声明">¶</a>2.2.3 连续型数据类型的声明</h4>
+<p><code>&lt;net_declar&gt;&lt;drive_strength&gt;&lt;range&gt;&lt;delay&gt;&lt;list_of_variables&gt;;</code></p>
+<ul>
+<li>net_declar：包括wire、tri等等连线型中的任意一种</li>
+<li>dirve_strength:用来表示连线变量的驱动强度</li>
+<li>rang：用来指定数据位标量或矢量。若该项默认，表示数据类型为1位的标量，超过1位则为矢量</li>
+<li>delay：指定仿真延迟时间</li>
+<li>list_of_variables：变量名称，一次可定义多个名称，用逗号分开</li>
+</ul>
+<h4 id="2-2-4-寄存器型"><a class="header-anchor" href="#2-2-4-寄存器型">¶</a>2.2.4 寄存器型</h4>
+<p>reg型是数据储存单元的抽象类型，其对应的硬件电路原件具有状态保持作用，能够存储数据，如触发器、锁存器等<br>
+reg型变量常用于行为级描述，由过程赋值语句对其进行赋值</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//reg型变量简单例子：</span></span><br><span class="line">reg a;          <span class="comment">//定义一个1位的名为&#x27;a&#x27;的reg变量</span></span><br><span class="line">reg[<span class="number">3</span>:<span class="number">0</span>]b;      <span class="comment">//定义一个4位的名为&#x27;b&#x27;的reg变量</span></span><br><span class="line">reg[<span class="number">8</span>:<span class="number">1</span>]c,d,e;  定义三个名称分别为c、d、e的<span class="number">8</span>位reg型变量</span><br><span class="line"></span><br><span class="line"><span class="comment">//reg型变量一般为无符号数，若将一个负数赋给reg型变量，则自动转换成二进制补码形式。例如：</span></span><br><span class="line">reg <span class="keyword">signed</span>[<span class="number">3</span>:<span class="number">0</span>]rega;</span><br><span class="line">rega = <span class="number">-2</span>;      <span class="comment">//rega的值为1110(14)，是2的补码</span></span><br></pre></td></tr></table></figure>
+<h4 id="2-2-5-寄存器型数据类型的声明"><a class="header-anchor" href="#2-2-5-寄存器型数据类型的声明">¶</a>2.2.5 寄存器型数据类型的声明</h4>
+<p><code>reg&lt;range&gt;&lt;list_of_register_variables&gt;;</code></p>
+<ul>
+<li>range：可选项，它指定了reg型变量的位宽，缺省时为1位</li>
+<li>list_of_register_variables：为变量名称列表，一次可以定义多个名称，之间用逗号分开</li>
+</ul>
+<h4 id="2-2-6-物理数据类型声明的例子"><a class="header-anchor" href="#2-2-6-物理数据类型声明的例子">¶</a>2.2.6 物理数据类型声明的例子</h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">reg rega;           <span class="comment">//定义一个1位寄存器型变量</span></span><br><span class="line">reg[<span class="number">7</span>:<span class="number">0</span>] regb;      <span class="comment">//定义一个8位的寄存器型变量</span></span><br><span class="line">tri[<span class="number">7</span>:<span class="number">0</span>] tribus;    <span class="comment">//定义一个8位的三态总线</span></span><br><span class="line">tri0[<span class="number">15</span>:<span class="number">0</span>] busa;    <span class="comment">//定义一个16位连线型，处于三态时为下拉电阻</span></span><br><span class="line">tri1[<span class="number">31</span>:<span class="number">0</span>] busb;    <span class="comment">//定义一个32位连线型，处于三态时为上拉电阻</span></span><br><span class="line">reg scalared[<span class="number">1</span>:<span class="number">4</span>] b;<span class="comment">//定义一个4位的标量型储存器矢量</span></span><br><span class="line">wire(pull1,strong0) c = a + b;  <span class="comment">//定义一个1和0的驱动强度不同的1位连线型变量c</span></span><br><span class="line">trireg(large) storeline;        <span class="comment">//定义一个具有大强度的电荷存储功能的存储线</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*在数字电路中，三态逻辑(英语:Three-state logic)允许输出端在0和1两种逻辑电平之外呈现高阻态，等效于将输出的影响从后级电路中移除。</span></span><br><span class="line"><span class="comment">这允许多个电路共同使用同一个输出线，例如总线结构</span></span><br><span class="line"><span class="comment">在总线连接的结构上。总线上挂有多个设备，设备与总线以高阻的形式连接。这样在设备不占用总线时自动释放总线，以方便其他设备获得总线的使用权.*/</span></span><br></pre></td></tr></table></figure>
+<h4 id="2-2-7-存储器型"><a class="header-anchor" href="#2-2-7-存储器型">¶</a>2.2.7 存储器型</h4>
+<p>储存器型变量可以描述RAM型、ROM型储存器以及reg文件<br>
+储存器变量的一般声明格式为：<br>
+<code>reg&lt;range1&gt;&lt;name_of_register&gt;&lt;range2&gt;</code></p>
+<ul>
+<li>range1和range2都是可选项，缺省都为1</li>
+<li>range1：表示存储器当中寄存器的位宽，格式为[msb:lsb]</li>
+<li>range2：表示寄存器的个数，格式为[msb:lsb]，即拥有msb-lsb+1个</li>
+<li>name_of_registers：变量名称，一次可以定义多个名称，之间用逗号隔开</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">reg[<span class="number">7</span>:<span class="number">0</span>] mem1[<span class="number">255</span>:<span class="number">0</span>];           <span class="comment">//定义了一个有256个8位寄存器的存储器mem1</span></span><br><span class="line">                                <span class="comment">//地址范围是0到255</span></span><br><span class="line">reg[<span class="number">15</span>:<span class="number">0</span>] mem2[<span class="number">127</span>:<span class="number">0</span>],reg1,reg2;<span class="comment">//定义了一个具有128个16位寄存器的储存器mem2和两个16位寄存器reg1和reg2</span></span><br><span class="line">reg[n<span class="number">-1</span>:<span class="number">0</span>] a;                   <span class="comment">//表示一个n位寄存器a</span></span><br><span class="line">reg mem1[n<span class="number">-1</span>:<span class="number">0</span>]                 <span class="comment">//表示一个由n个1位寄存器构成的存储器mem1</span></span><br></pre></td></tr></table></figure>
+<h3 id="2-3-抽象数据类型"><a class="header-anchor" href="#2-3-抽象数据类型">¶</a>2.3 抽象数据类型</h3>
+<p>抽象数据类型主要包括整型<code>integer</code>、时间型<code>time</code>、实型<code>real</code>及参数型<code>parameter</code></p>
+<h4 id="2-3-1-整型"><a class="header-anchor" href="#2-3-1-整型">¶</a>2.3.1 整型</h4>
+<p><code>integer&lt;list—of—register—variables&gt;; </code></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">integer index;          <span class="comment">//简单的32位有符号整数</span></span><br><span class="line">integer i[<span class="number">31</span>:<span class="number">0</span>];        <span class="comment">//定义了整型数组，它有32个元素</span></span><br></pre></td></tr></table></figure>
+<h4 id="2-3-2-时间型"><a class="header-anchor" href="#2-3-2-时间型">¶</a>2.3.2 时间型</h4>
+<p>时间型数据与整型数据相似，只是它是64位无符号数。时间型数据主要用于对模拟时间的储存与计算处理，常与系统函数<code>$time</code>一起使用。<br>
+声明格式：<br>
+<code>time&lt;list_of_register_variables&gt;</code></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">time a,b;           <span class="comment">//定义了两个64位的时间型变量</span></span><br></pre></td></tr></table></figure>
+<h4 id="2-3-3-实数型"><a class="header-anchor" href="#2-3-3-实数型">¶</a>2.3.3 实数型</h4>
+<p>实数型数据在机器码表示法中是浮点型数值，可用于对延迟时间的计算<br>
+声明格式：<br>
+<code>real&lt;list_of_variables&gt;</code></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">real stime;         <span class="comment">//定义了一个实数型数据</span></span><br></pre></td></tr></table></figure>
+<p>####2.3.4 参数型<br>
+属于常量，在仿真开始之前就被赋值，在仿真过程中保持不变，以提高程序的可读性和维护性<br>
+声明格式：<br>
+<code>parameter&lt;name_of_parameter&gt;=&lt;value&gt;</code></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">parameter length = <span class="number">32</span>,weight = <span class="number">16</span>;</span><br><span class="line">parameter PI = <span class="number">3.14</span>,LOAD = <span class="number">4&#x27;b</span>1101;</span><br><span class="line">parameter DELAY=(BYTE+BIT)/<span class="number">2</span>;</span><br></pre></td></tr></table></figure>
+<h3 id="2-3-运算符和表达式"><a class="header-anchor" href="#2-3-运算符和表达式">¶</a>2.3 运算符和表达式</h3>
+<p><img src="https://s2.ax1x.com/2020/02/26/3UO7Zt.png" alt="运算符"></p>
+<h4 id="2-3-1-算术运算符"><a class="header-anchor" href="#2-3-1-算术运算符">¶</a>2.3.1 算术运算符</h4>
+<p>算术运算符包含加法<code>+</code>；减法<code>-</code>；乘法<code>*</code>；除法<code>/</code>；取模<code>%</code></p>
+<ol>
+<li>算术操作结果的算术表达式的结果由最长的操作数决定。在赋值语句下，算术操作结果的长度由操作左端目标长度决定</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">reg[<span class="number">3</span>:<span class="number">0</span>] A,B,C;</span><br><span class="line">reg[<span class="number">5</span>:<span class="number">0</span>] D;</span><br><span class="line">A = B + C;      <span class="comment">//4位</span></span><br><span class="line">D = B + C;      <span class="comment">//6位</span></span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>有符号数和无符号数的使用</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">module</span> arith_tb;</span><br><span class="line">reg[<span class="number">3</span>:<span class="number">0</span>] a;</span><br><span class="line">reg[<span class="number">2</span>:<span class="number">0</span>] b;</span><br><span class="line">initial</span><br><span class="line">    begin</span><br><span class="line">        a = <span class="number">4&#x27;b</span>1111;        <span class="comment">//15</span></span><br><span class="line">        b = <span class="number">3&#x27;b</span>011;         <span class="comment">//3</span></span><br><span class="line">        $display(<span class="string">&quot;%b&quot;</span>,a*b)  <span class="comment">//乘法运算，结果等于4&#x27;b1101,高位被舍去</span></span><br><span class="line">        $display(<span class="string">&quot;%b&quot;</span>,a/b); <span class="comment">//除法运算，结果为4&#x27;b0101</span></span><br><span class="line">        $display(<span class="string">&quot;%b&quot;</span>,a+b); <span class="comment">//加法运算，结果为4&#x27;b0010</span></span><br><span class="line">        $diaplay(<span class="string">&quot;%b&quot;</span>,a-b); <span class="comment">//减法运算，结果为4&#x27;b0010</span></span><br><span class="line">        $diaplay(<span class="string">&quot;%b&quot;</span>,a%b); <span class="comment">//取模运算，结果为4&#x27;b0000</span></span><br><span class="line">    end</span><br><span class="line">endmodule</span><br><span class="line"><span class="comment">/*注意：二进制的减法先补全位数，使两个数同位，然后再取补码，</span></span><br><span class="line"><span class="comment">正二进制数的补码是它本身，</span></span><br><span class="line"><span class="comment">负二进制数的补码是它取反后加1*/</span></span><br></pre></td></tr></table></figure>
+<h4 id="2-3-2-相等关系运算符"><a class="header-anchor" href="#2-3-2-相等关系运算符">¶</a>2.3.2 相等关系运算符</h4>
+<ol>
+<li>等于<code>==</code>、不等于<code>！=</code>、全等<code>===</code>、非全等<code>！==</code></li>
+<li>比较的结果有三种，真<code>1</code>、假<code>0</code>、不定值<code>x</code></li>
+</ol>
+<ul>
+<li><code>==</code>真值表</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">==</th>
+<th style="text-align:center">0</th>
+<th style="text-align:center">1</th>
+<th style="text-align:center">x</th>
+<th style="text-align:center">z</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">0</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">x</td>
+<td style="text-align:center">x</td>
+</tr>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">x</td>
+<td style="text-align:center">x</td>
+</tr>
+<tr>
+<td style="text-align:center">x</td>
+<td style="text-align:center">x</td>
+<td style="text-align:center">x</td>
+<td style="text-align:center">x</td>
+<td style="text-align:center">x</td>
+</tr>
+<tr>
+<td style="text-align:center">z</td>
+<td style="text-align:center">x</td>
+<td style="text-align:center">x</td>
+<td style="text-align:center">x</td>
+<td style="text-align:center">x</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><code>===</code>真值表</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">===</th>
+<th style="text-align:center">0</th>
+<th style="text-align:center">1</th>
+<th style="text-align:center">x</th>
+<th style="text-align:center">z</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">0</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+</tr>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+</tr>
+<tr>
+<td style="text-align:center">x</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">0</td>
+</tr>
+<tr>
+<td style="text-align:center">z</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">1</td>
+</tr>
+</tbody>
+</table>
+<h4 id="2-3-3-条件运算符"><a class="header-anchor" href="#2-3-3-条件运算符">¶</a>2.3.3 条件运算符</h4>
+<p>表达形式如下：<br>
+<code>条件表达式? 表达式1 : 表达式2</code><br>
+条件表达式的计算结果只有<code>1</code>,<code>0</code>和<code>x</code>三种，结果为<code>1</code>时执行表达式1；结果为<code>0</code>时执行表达式2</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">module mux2(in1,in2,sel,out);</span><br><span class="line">    input [3:0] in1,in2;</span><br><span class="line">    input sel;</span><br><span class="line">    output [3:0] out;</span><br><span class="line">    reg [3:0] out;</span><br><span class="line">    assign out = (sel!)?in1:in2;</span><br><span class="line">    //sel为0时out等于in1，反之等于in2</span><br><span class="line">endmodule</span><br></pre></td></tr></table></figure>
+<h4 id="2-3-4-连接和复制运算符"><a class="header-anchor" href="#2-3-4-连接和复制运算符">¶</a>2.3.4 连接和复制运算符</h4>
+<ul>
+<li>连接运算符</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;信号1的某几位，信号2的某几位，...，信号n的某几位&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>复制操作符<br>
+将一个表达式放入双重花括号中，复制因子放在第一层括号中</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">module con_rep_tb;</span><br><span class="line">reg [2:0] a;</span><br><span class="line">reg [3:0] b;</span><br><span class="line">reg [7:0] c;</span><br><span class="line">reg [4:0] d;</span><br><span class="line">reg [5:0] e;</span><br><span class="line">initial</span><br><span class="line">    begin</span><br><span class="line">    a = 3&#x27;b101;</span><br><span class="line">    b = 4&#x27;b1110;</span><br><span class="line">    c = &#123;a,b&#125;;</span><br><span class="line">    d = &#123;a[2:1],b[2:0]&#125;;//d取了a的第3位到2位与b的第3位到1位拼接</span><br><span class="line">    e = &#123;2&#123;a&#125;&#125;;</span><br><span class="line">    $display(&quot;%b&quot;,c);   //8&#x27;b01011110</span><br><span class="line">    $display(&quot;%b&quot;,d);   //5&#x27;b10110</span><br><span class="line">    $display(&quot;%b&quot;,e);   //6&#x27;b101101</span><br><span class="line">    end</span><br><span class="line">endmodule</span><br></pre></td></tr></table></figure>
+<h3 id="2-4-模块"><a class="header-anchor" href="#2-4-模块">¶</a>2.4 模块</h3>
+<h4 id="2-4-1-模块的基本概念"><a class="header-anchor" href="#2-4-1-模块的基本概念">¶</a>2.4.1 模块的基本概念</h4>
+<ol>
+<li>模块(module)是Veril HDL语言的基本单元，它代表一个基本的功能块，用于描述某个设计的功能或结构以及与其他模块通信的外部接口<br>
+<img src="https://s2.ax1x.com/2020/02/28/3DOVPI.png" alt="3DOVPI.png"></li>
+<li>一个模块主要包括：</li>
+</ol>
+<ul>
+<li>模块的开始与结束：以关键词module开始，以关键词endmodule结束的一段程序，其中模块开始语句必须要以分号结束</li>
+<li>端口定义：用来定义端口列表里的变量哪些是输入(input)、输出(output)和双向端口(inout)以及位宽的说明。</li>
+<li>数据类型说明：数据类型在语言上包括wire、reg、memory和parameter等类型，用来说明模块中所用到的内部信号、调用模块等的声明语句和功能定义语句</li>
+<li>逻辑功能描述：用来产生各种逻辑(主要是组合逻和时序逻辑)。主要包括以下部分：initial语句、always语句、其它子模块实例化语句、门实例化语句、用户自定义原句(UDP)实例化语句、连续赋值语句(assign)、函数(function)和任务(task)<br>
+例：上升沿D触发器</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">module</span> <span class="title">dff</span><span class="params">(din,clk,q)</span></span>;</span><br><span class="line">    input din,clk;</span><br><span class="line">    output q;</span><br><span class="line">    reg q;</span><br><span class="line">    always@(posedge clk)    <span class="comment">//posedge指D触发器上升沿触发</span></span><br><span class="line">        q &lt;= din;</span><br><span class="line">endmodule</span><br></pre></td></tr></table></figure>
+<h4 id="2-4-2-端口"><a class="header-anchor" href="#2-4-2-端口">¶</a>2.4.2 端口</h4>
+<p>端口的定义：<br>
+模块的端口可以是输入口<code>input</code>、输出端口<code>output</code>或双向端口<code>inout</code><br>
+模块的端口声明了模块的输入输出口。其格式如下：<br>
+module 模块名(口1,口2,…)<br>
+模块的端口表示的是模块的输入和输出口名，也就是说，它与别的模块联系端口的标识。<br>
+在模块被引用时，在引用的模块中，有些信号要输入到被引用的模块中，有的信号需要从被引用的模块中取出来。在引用模块时其端口可以用两种方法连接：</p>
+<ol>
+<li>在引用时严格按照模块定义的端口顺序来连接，不用标明原模块定义时规定的端口名，例如：<br>
+<code>模块名(连接端口1信号名，连接端口2信号名，...)</code></li>
+<li>在引用时用“.”符号，标明原模块是定义时规定的端口名，例如：<br>
+<code>模块名(.端口1名(连接信号1名)，.端口2名(连接信号2名)，...)</code><br>
+这样的好处在于可以用端口名与被引用模块的端口相对应，而不必严格按端口顺序对应，提高了程序的可读性和可移植性。</li>
+</ol>
+</div><div class="article-licensing box"><div class="licensing-title"><p>Verilog HDL 简介与基本语法（1）</p><p><a href="http://example.com/2020/03/01/FPGA学习  阶段一：Verilog HDL 简介与基本语法(1)/">http://example.com/2020/03/01/FPGA学习  阶段一：Verilog HDL 简介与基本语法(1)/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>作者</h6><p>Hank.Gan</p></div></div><div class="level-item is-narrow"><div><h6>发布于</h6><p>2020-03-01</p></div></div><div class="level-item is-narrow"><div><h6>更新于</h6><p>2021-08-10</p></div></div><div class="level-item is-narrow"><div><h6>许可协议</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/FPGA/">FPGA</a><a class="link-muted mr-2" rel="tag" href="/tags/%E7%A1%AC%E4%BB%B6/">硬件</a><a class="link-muted mr-2" rel="tag" href="/tags/Verilog-HDL/">Verilog HDL</a></div><div class="sharethis-inline-share-buttons"></div><script src="https://platform-api.sharethis.com/js/sharethis.js#property=6112427332901f00128883e9&amp;product=inline-share-buttons" defer></script></article></div><div class="card"><div class="card-content"><h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3><div class="buttons is-centered"><a class="button donate" data-type="alipay"><span class="icon is-small"><i class="fab fa-alipay"></i></span><span>支付宝</span><span class="qrcode"><img src="/img/alipay.jpg" alt="支付宝"></span></a><a class="button donate" data-type="wechat"><span class="icon is-small"><i class="fab fa-weixin"></i></span><span>微信</span><span class="qrcode"><img src="/img/wechat.png" alt="微信"></span></a></div></div></div><div class="card"><nav class="post-navigation mt-4 level is-mobile card-content"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2020/03/14/FPGA%E5%AD%A6%E4%B9%A0%20%20%E9%98%B6%E6%AE%B5%E4%B8%80%EF%BC%9AVerilog%20HDL%20%E7%AE%80%E4%BB%8B%E4%B8%8E%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95(2)/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">Verilog HDL 简介与基本语法 2</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2020/02/18/%E5%AD%97%E5%85%B8(dict)%E5%9E%8B%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><span class="level-item">字典(dict)型数据结构</span><i class="level-item fas fa-chevron-right"></i></a></div></nav></div><div class="card"><div class="card-content"><h3 class="title is-5">评论</h3><div id="SOHUCS" sid="2020/03/01/FPGA学习  阶段一：Verilog HDL 简介与基本语法(1)/"></div><script charset="utf-8" src="https://changyan.sohu.com/upload/changyan.js"></script><script>window.changyan.api.config({appid: 'cyuFI1qRp',conf: 'prod_11b7b7671b8d9690e2692103abfb9cf0'});</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar is-rounded" src="/img/avatar.jpg" alt="Misaka Misaka"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">Misaka Misaka</p><p class="is-size-6 is-block">穷则独善其身，达则兼济天下</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>湖北武汉</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">文章</p><a href="/archives"><p class="title">8</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">分类</p><a href="/categories"><p class="title">5</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">标签</p><a href="/tags"><p class="title">6</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://weibo.com/p/1005056784549537" target="_blank" rel="noopener" id="widget-follow">微博 Weibo</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/ganyunhan"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Bili" href="https://space.bilibili.com/343157606">Bili</a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Mail" href="Mailto:hank.gan@foxmail.com"><i class="fa fa-envelope"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="QQ" href="tencent://message/?uin=1014947300&amp;Site=&amp;Menu=yes"><i class="fab fa-qq"></i></a></div></div></div><!--!--><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">链接</h3><ul class="menu-list"><li><a class="level is-mobile is-mobile" href="https://space.bilibili.com/343157606" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Bilibili空间</span></span><span class="level-right"><span class="level-item tag">space.bilibili.com</span></span></a></li></ul></div><a class="link-more button is-light is-small size-small" href="/friends/">查看更多</a></div></div><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/%E7%A1%AC%E4%BB%B6/"><span class="level-start"><span class="level-item">硬件</span></span><span class="level-end"><span class="level-item tag">4</span></span></a><ul><li><a class="level is-mobile" href="/categories/%E7%A1%AC%E4%BB%B6/FPGA/"><span class="level-start"><span class="level-item">FPGA</span></span><span class="level-end"><span class="level-item tag">3</span></span></a><ul><li><a class="level is-mobile" href="/categories/%E7%A1%AC%E4%BB%B6/FPGA/Verilog-HDL/"><span class="level-start"><span class="level-item">Verilog HDL</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li></ul></li></ul></li><li><a class="level is-mobile" href="/categories/%E8%BD%AF%E4%BB%B6/"><span class="level-start"><span class="level-item">软件</span></span><span class="level-end"><span class="level-item tag">4</span></span></a><ul><li><a class="level is-mobile" href="/categories/%E8%BD%AF%E4%BB%B6/Python/"><span class="level-start"><span class="level-item">Python</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li></ul></li></ul></div></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">归档</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2021/08/"><span class="level-start"><span class="level-item">八月 2021</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/03/"><span class="level-start"><span class="level-item">三月 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/02/"><span class="level-start"><span class="level-item">二月 2020</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/01/"><span class="level-start"><span class="level-item">一月 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="column-right-shadow is-hidden-widescreen"></div></div><div class="column column-right is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only order-3"><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-08-10T06:12:13.000Z">2021-08-10</time></p><p class="title"><a href="/2021/08/10/FPGA%E5%AD%A6%E4%B9%A0%E7%95%AA%E5%A4%96%E7%AF%87%EF%BC%9A%E5%9C%A8MacOS%E4%B8%8A%E7%BC%96%E8%AF%91%E5%92%8C%E4%BB%BF%E7%9C%9Fverilog/">FPGA学习番外篇：在MacOS上编译和仿真verilog</a></p><p class="categories"><a href="/categories/%E7%A1%AC%E4%BB%B6/">硬件</a> / <a href="/categories/%E7%A1%AC%E4%BB%B6/FPGA/">FPGA</a> / <a href="/categories/%E7%A1%AC%E4%BB%B6/FPGA/Verilog-HDL/">Verilog HDL</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-03-14T14:55:57.000Z">2020-03-14</time></p><p class="title"><a href="/2020/03/14/FPGA%E5%AD%A6%E4%B9%A0%20%20%E9%98%B6%E6%AE%B5%E4%B8%80%EF%BC%9AVerilog%20HDL%20%E7%AE%80%E4%BB%8B%E4%B8%8E%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95(2)/">Verilog HDL 简介与基本语法 2</a></p><p class="categories"><a href="/categories/%E7%A1%AC%E4%BB%B6/">硬件</a> / <a href="/categories/%E7%A1%AC%E4%BB%B6/FPGA/">FPGA</a> / <a href="/categories/%E7%A1%AC%E4%BB%B6/FPGA/Verilog-HDL/">Verilog HDL</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-02-29T16:42:10.000Z">2020-03-01</time></p><p class="title"><a href="/2020/03/01/FPGA%E5%AD%A6%E4%B9%A0%20%20%E9%98%B6%E6%AE%B5%E4%B8%80%EF%BC%9AVerilog%20HDL%20%E7%AE%80%E4%BB%8B%E4%B8%8E%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95(1)/">Verilog HDL 简介与基本语法（1）</a></p><p class="categories"><a href="/categories/%E7%A1%AC%E4%BB%B6/">硬件</a> / <a href="/categories/%E7%A1%AC%E4%BB%B6/FPGA/">FPGA</a> / <a href="/categories/%E7%A1%AC%E4%BB%B6/FPGA/Verilog-HDL/">Verilog HDL</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-02-17T17:01:25.000Z">2020-02-18</time></p><p class="title"><a href="/2020/02/18/%E5%AD%97%E5%85%B8(dict)%E5%9E%8B%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">字典(dict)型数据结构</a></p><p class="categories"><a href="/categories/%E8%BD%AF%E4%BB%B6/">软件</a> / <a href="/categories/%E8%BD%AF%E4%BB%B6/Python/">Python</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-02-14T14:02:24.000Z">2020-02-14</time></p><p class="title"><a href="/2020/02/14/Python%E5%9F%BA%E7%A1%80%EF%BC%9A%E6%93%8D%E4%BD%9Clist%E4%BB%A5%E5%8F%8Atuple%E7%9A%84%E5%BC%95%E5%85%A5/">Python基础：操作list以及tuple的引入</a></p><p class="categories"><a href="/categories/%E8%BD%AF%E4%BB%B6/">软件</a> / <a href="/categories/%E8%BD%AF%E4%BB%B6/Python/">Python</a></p></div></article></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/2020%E8%8A%82%E8%83%BD%E5%87%8F%E6%8E%92/"><span class="tag">2020节能减排</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/FPGA/"><span class="tag">FPGA</span><span class="tag">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Python/"><span class="tag">Python</span><span class="tag">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Verilog-HDL/"><span class="tag">Verilog HDL</span><span class="tag">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%A1%AC%E4%BB%B6/"><span class="tag">硬件</span><span class="tag">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E8%BD%AF%E4%BB%B6/"><span class="tag">软件</span><span class="tag">4</span></a></div></div></div></div></div><div class="card widget" id="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">订阅更新</h3><form action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open(&#039;https://feedburner.google.com/fb/a/mailverify?uri=&#039;,&#039;popupwindow&#039;,&#039;scrollbars=yes,width=550,height=520&#039;);return true"><input type="hidden" value="" name="uri"><input type="hidden" name="loc" value="en_US"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button is-primary" type="submit" value="订阅"></div></div></form></div></div></div></div></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img class="logo-img" src="/img/logo.png" alt="御坂小镇" height="28"><img class="logo-img-dark" src="/img/logo.png" alt="御坂小镇" height="28"></a><p class="is-size-7"><span>&copy; 2021 Hank.Gan</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/imaegoo/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a><br><a href="http://www.miitbeian.gov.cn" target="_blank">鄂ICP备2021002622号</a> - <span id="busuanzi_container_site_uv">共<span id="busuanzi_value_site_uv">0</span>个访客</span></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Github" href="https://github.com/ganyunhan"><i class="fab fa-github"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Mail" href="Mailto:hank.gan@foxmail.com"><i class="fa fa-envelope"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="QQ" href="tencent://message/?uin=1014947300&amp;Site=&amp;Menu=yes"><i class="fab fa-qq"></i></a></p></div></div></div></div></footer><script src="https://cdnjs.loli.net/ajax/libs/jquery/3.3.1/jquery.min.js"></script><script src="https://cdnjs.loli.net/ajax/libs/moment.js/2.22.2/moment-with-locales.min.js"></script><script src="https://cdnjs.loli.net/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" defer></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><!--!--><script src="https://cdnjs.loli.net/ajax/libs/cookieconsent/3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "此网站使用 Cookie，以启用评论系统和分析功能。",
+          dismiss: "知道了",
+          allow: "允许使用Cookie",
+          deny: "拒绝",
+          link: "了解更多",
+          policy: "Cookie政策",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdnjs.loli.net/ajax/libs/lightgallery/1.6.8/js/lightgallery.min.js" defer></script><script src="https://cdnjs.loli.net/ajax/libs/justifiedGallery/3.7.0/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><div class="searchbox-pinyin"><label class="checkbox"><input id="search-by-pinyin" type="checkbox" checked="checked"><span> 拼音检索</span></label></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/imaegoo/pinyin.js" defer></script><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script><script type="text/javascript" src="/js/imaegoo/imaegoo.js"></script><script type="text/javascript" src="/js/imaegoo/universe.js"></script><script type="text/javascript" src="/js/live2d/autoload.js"></script></body></html>
